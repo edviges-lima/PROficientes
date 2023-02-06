@@ -1,7 +1,9 @@
 package com.generation.proficientes.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,6 +19,10 @@ public class Postagem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 5, max = 50, message = "O título deve conter no mínimo 05 e no máximo 50 caracteres!")
+    private String titulo;
+
     @UpdateTimestamp
     private LocalDateTime data;
 
@@ -24,8 +30,29 @@ public class Postagem {
     @Size(min = 1, max = 1000)
     private String comentario;
 
-    @NotBlank
-    private Integer curtir;
+
+    @Min(value = 0)
+    private int countLike;
+
+    public int getCountLike() {
+        return countLike;
+    }
+
+    public void setCountLike(int countLike) {
+        this.countLike = countLike;
+    }
+
+    public Tema getTema() {
+        return tema;
+    }
+
+    public void setTema(Tema tema) {
+        this.tema = tema;
+    }
+
+    @ManyToOne
+    @JsonIgnoreProperties("postagem")
+    private Tema tema;
 
 
     public Long getId() {
@@ -52,11 +79,11 @@ public class Postagem {
         this.comentario = comentario;
     }
 
-    public Integer getCurtir() {
-        return curtir;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setCurtir(Integer curtir) {
-        this.curtir = curtir;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 }
